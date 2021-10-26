@@ -25,7 +25,6 @@ int main(int argc, char *argv[]) {
 
     struct Robot robot;
     struct Wall_collection *head = NULL;
-    // int front_left_sensor, front_right_sensor=0; // default code
     int front_left_sensor, front_right_sensor =0;
     int left_sensor, right_sensor =0;
     clock_t start_time, end_time;
@@ -61,7 +60,7 @@ int main(int argc, char *argv[]) {
 
         //Move robot based on user input commands/auto commands
         if (robot.auto_mode == 1)
-            robotAutoMotorMove(&robot, front_left_sensor, front_right_sensor);    //default 
+            robotAutoMotorMove(&robot, front_left_sensor, front_right_sensor, left_sensor, right_sensor);    //default 
             // robotAutoMotorMove(&robot, front_left_sensor, front_right_sensor, left_sensor, right_sensor);
         robotMotorMove(&robot);
 
