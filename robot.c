@@ -229,27 +229,6 @@ int checkRobotSensorRightAllWalls(struct Robot * robot, struct Wall_collection *
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void robotUpdate(struct SDL_Renderer * renderer, struct Robot * robot){
     double xDir, yDir;
 
@@ -405,22 +384,40 @@ void robotMotorMove(struct Robot * robot) {
     robot->y = (int) y_offset;
 }
 
-void robotAutoMotorMove(struct Robot * robot, int front_left_sensor, int front_right_sensor) {
+void robotAutoMotorMove(struct Robot * robot, int front_left_sensor, int front_right_sensor, int left_sensor, int right_sensor) {
 
     if ((front_left_sensor == 0) && (front_right_sensor == 0)) {
-        if (robot->currentSpeed<2)
+        if (robot->currentSpeed<8)
             robot->direction = UP;
     }
     else if ((robot->currentSpeed>0) && ((front_left_sensor == 1) || (front_right_sensor == 1)) ) {
         robot->direction = DOWN;
+
+        if (left_sensor > right_sensor) {
+            robot->direction = RIGHT;
+        }
+        else if (left_sensor < right_sensor) {
+            robot->direction = LEFT;
+        }
+        else if (left_sensor == right_sensor) {
+            robot->direction = LEFT;
+        }
+        
     }
-    else if ((robot->currentSpeed==0) && ((front_left_sensor == 1) || (front_right_sensor == 1)) ) {
-        robot->direction = LEFT;
-    }
-    else if ((robot->currentSpeed==0) && ((front_left_sensor == 1) || (front_right_sensor == 0)) ) {
-        robot->direction = RIGHT;
-    }
-    else if ((robot->currentSpeed==0) && ((front_left_sensor == 0) || (front_right_sensor == 1)) ) {
-        robot->direction = RIGHT;
-    }
+    // else if ((robot->currentSpeed==0) && ((front_left_sensor == 1) || (front_right_sensor == 1)) ) {
+    //     robot->direction = LEFT;
+    // }
+    // else if ((robot->currentSpeed==0) && ((front_left_sensor == 1) || (front_right_sensor == 0)) ) {
+    //     robot->direction = RIGHT;
+    // }
+    // else if ((robot->currentSpeed==0) && ((front_left_sensor == 0) || (front_right_sensor == 1)) ) {
+    //     robot->direction = RIGHT;
+    // }
+
+    // fix direction
+    // else if ((robot->currentSpeed==0) && ((left_sensor < 1) || (right_sensor > 0)) ) {
+    //     robot->direction = LEFT;
+    // }
+
+
 }
