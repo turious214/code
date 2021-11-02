@@ -385,69 +385,46 @@ void robotMotorMove(struct Robot * robot) {
 }
 
 void robotAutoMotorMove(struct Robot * robot, int front_left_sensor, int front_right_sensor, int left_sensor, int right_sensor) {
+    int defaultDirection = 1;
 
     if ((front_left_sensor == 0) && (front_right_sensor == 0)) {
         if (robot->currentSpeed<5)
             robot->direction = UP;
     }
-    else if ((robot->currentSpeed>0) && ((front_left_sensor > 0) || (front_right_sensor > 0)) ) {
-        robot->direction = DOWN;
-        robot->direction = LEFT;
-    }
-
-    if (left_sensor > right_sensor) {
+    
+    if (front_left_sensor - front_right_sensor > 0) {
         robot->direction = RIGHT;
     }
-    else if (left_sensor < right_sensor) {
+    else if (front_right_sensor - front_left_sensor > 0) {
         robot->direction = LEFT;
     }
 
-    if (front_left_sensor > front_right_sensor) {
+    if ((front_left_sensor > 0) && (front_right_sensor > 0)) {
+        robot->direction = DOWN;
+        robot->direction = DOWN;
+        if (left_sensor >0) {
+            robot->direction = RIGHT;
+        }
+        else if (right_sensor >0) {
+            robot->direction = LEFT;
+        }
+        else if (left_sensor <1 || right_sensor <1) {
+            if (front_left_sensor - front_right_sensor > 0) {
+                robot->direction = RIGHT;
+            }
+            else if (front_right_sensor - front_left_sensor > 0) {
+                robot->direction = LEFT;
+            }
+            else if (front_right_sensor == front_left_sensor) {
+                robot->direction = LEFT;
+            }
+        }
+    } 
+    
+    if (left_sensor - right_sensor > 3 ) {
         robot->direction = RIGHT;
     }
-    else if (front_left_sensor < front_right_sensor) {
+    else if (right_sensor - left_sensor > 3 ) {
         robot->direction = LEFT;
     }
-
-
-
-
-    if (front_left_sensor >0 & left_sensor > 0) {
-        robot->direction = RIGHT;
-    }
-    if (front_right_sensor >0 & right_sensor > 0) {
-        robot->direction = LEFT;
-    }
-    if (front_left_sensor >0 & front_right_sensor >0 & left_sensor > 0 & right_sensor > 0) {
-        robot->direction = DOWN;
-    }
-
-    if (front_left_sensor >2 & front_right_sensor >2 & left_sensor > 2 ) {
-        robot->direction = DOWN;
-    }
-    if (front_left_sensor >2 & front_right_sensor >2 & right_sensor > 2) {
-        robot->direction = DOWN;
-    }
-
-
-    // else if (left_sensor == right_sensor) {
-    //     robot->direction = LEFT;
-    // }
-
-    // else if ((robot->currentSpeed==0) && ((front_left_sensor == 1) || (front_right_sensor == 1)) ) {
-    //     robot->direction = LEFT;
-    // }
-    // else if ((robot->currentSpeed==0) && ((front_left_sensor == 1) || (front_right_sensor == 0)) ) {
-    //     robot->direction = RIGHT;
-    // }
-    // else if ((robot->currentSpeed==0) && ((front_left_sensor == 0) || (front_right_sensor == 1)) ) {
-    //     robot->direction = RIGHT;
-    // }
-
-    // fix direction
-    // else if ((robot->currentSpeed==0) && ((left_sensor < 1) || (right_sensor > 0)) ) {
-    //     robot->direction = LEFT;
-    // }
-
-
 }
