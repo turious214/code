@@ -393,9 +393,11 @@ void robotAutoMotorMove(struct Robot * robot, int front_left_sensor, int front_r
     }
     
     if (front_left_sensor - front_right_sensor > 0) {
+        robot->direction = DOWN;
         robot->direction = RIGHT;
     }
     else if (front_right_sensor - front_left_sensor > 0) {
+        robot->direction = DOWN;
         robot->direction = LEFT;
     }
 
@@ -420,7 +422,11 @@ void robotAutoMotorMove(struct Robot * robot, int front_left_sensor, int front_r
             }
         }
     } 
-    
+
+    if (right_sensor > 0 && left_sensor > 0 && front_left_sensor > 0 && front_right_sensor) {
+        robot->direction = DOWN;
+    }
+
     if (left_sensor - right_sensor > 3 ) {
         robot->direction = RIGHT;
     }
