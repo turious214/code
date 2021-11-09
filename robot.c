@@ -397,10 +397,7 @@ void robotAutoMotorMove(struct Robot * robot, int front_left_sensor, int front_r
     // int defaultDirection = 1;
     static int pre_left = 0;
     static int pre_terminate = 0;
-    robot->currentSpeed = 3;
-
-    printf("pre_left: %d, pre_terminate: %d, F_left: %d, F_right: %d \r\n",
-                 pre_left, pre_terminate, front_left_sensor, front_right_sensor);
+    robot->currentSpeed = 9;
 
     // if there is no bolck in the front, go stright, once the left sensor detected the wall
     // set stattic variabel pre_left as 1, instead, right sensor detected the wall set pre_left as -1
