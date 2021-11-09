@@ -390,13 +390,20 @@ void robotMotorMove(struct Robot * robot) {
 }
 
 void robotAutoMotorMove(struct Robot * robot, int front_left_sensor, int front_right_sensor, int left_sensor, int right_sensor) {
-    int defaultDirection = 1;
-    // 当前方无障碍物的时候，往前走
+    // when there is nothing blocked the path, just go straight
+
+    // when robot will reach a wall and there is no wall on the bouth side 
+    // the pre_left variable will deciede the direction.
+    // int defaultDirection = 1;
     static int pre_left = 0;
-    // 判断之前是否遇到锐角
     static int pre_terminate = 0;
-    robot->currentSpeed = 9;
-    //  前方无障碍物，跑
+    robot->currentSpeed = 3;
+
+    printf("pre_left: %d, pre_terminate: %d, F_left: %d, F_right: %d \r\n",
+                 pre_left, pre_terminate, front_left_sensor, front_right_sensor);
+
+    // if there is no bolck in the front, go stright, once the left sensor detected the wall
+    // set stattic variabel pre_left as 1, instead, right sensor detected the wall set pre_left as -1
     if (front_left_sensor == front_right_sensor && front_left_sensor <= 1 ) {
          pre_terminate = 0;
          robot->direction = UP;
@@ -407,18 +414,19 @@ void robotAutoMotorMove(struct Robot * robot, int front_left_sensor, int front_r
          }
          return;
     }
-
-    // 当前方有障碍物，且快要碰壁的时候，先后退
+    
+    // when there are wall in the front, and every close, speed down and go back
     if (front_left_sensor > 3 || front_right_sensor  >  3) {
         robot->currentSpeed = 1;
         robot->direction = DOWN;
         return;
     }
 
-    // 遇到对角，一直等待可行
+    // when meet the angle or a wall just in the front, 
+    // turn left at once until the side sensor can justify the 
+    // preleft or pre right
     if (pre_terminate == 1) {
         robot->currentSpeed = 0;
-        robot->direction = LEFT;
         pre_terminate = 1;
         if (pre_left == 1) {
             robot->direction = LEFT;
@@ -428,6 +436,7 @@ void robotAutoMotorMove(struct Robot * robot, int front_left_sensor, int front_r
         return;
     }
 
+    // when robot get close to a wall and biase to the left, it turn the right 
     if (front_left_sensor - front_right_sensor > 0) {
         robot->currentSpeed = 1;
         robot->direction = RIGHT;
@@ -439,21 +448,23 @@ void robotAutoMotorMove(struct Robot * robot, int front_left_sensor, int front_r
         return;
     }
 
+    // when robot go through a curve road and close to the left, robot turn to the right
     if (front_left_sensor == front_right_sensor && right_sensor < left_sensor) {
         robot->currentSpeed = 1;
         robot->direction = RIGHT;
         return;
     }
-
+    // when robot go through a curve road and close to the right, robot turn to the left 
     if (front_left_sensor == front_right_sensor && right_sensor > left_sensor) {
         robot->currentSpeed = 1;
         robot->direction = LEFT;
         return;
     }
 
+    // when it reach the angle, turn the direciton depends on the preleft value
     if (front_left_sensor == front_right_sensor && right_sensor == left_sensor) {
         robot->currentSpeed = 1;
-        robot->direction = LEFT;
+        // robot->direction = LEFT;
         pre_terminate = 1;
         if (pre_left == 1) {
             robot->direction = LEFT;
@@ -463,4 +474,3 @@ void robotAutoMotorMove(struct Robot * robot, int front_left_sensor, int front_r
     }
     return;
 }
-
